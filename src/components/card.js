@@ -1,3 +1,5 @@
+import { articles } from "../mocks/data";
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -17,6 +19,44 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+  // card
+  const card = document.createElement('div');
+  card.classList.add('card');
+
+  // headline
+  const newHeadline = document.createElement('div');
+  newHeadline.classList.add('headline');
+  newHeadline.textContent = article.headline;
+  card.appendChild(newHeadline);
+
+  // author
+  const newAuthor = document.createElement('div')
+  newAuthor.classList.add('author');
+  card.appendChild(newAuthor);
+
+  // img-container
+  const newImageContainer = document.createElement('div');
+  newImageContainer.classList.add('img-container');
+  newAuthor.appendChild(newImageContainer);
+
+  // img
+  const newAuthorPhoto = document.createElement('img');
+  newAuthorPhoto.src = article.authorPhoto;
+  newImageContainer.appendChild(newAuthorPhoto);
+
+  // authorName
+  const newAuthorName = document.createElement('span');
+  newAuthorName.textContent = `By ${article.authorName}`;
+  newAuthor.appendChild(newAuthorName);
+
+  // addEventListener
+  card.addEventListener('click', () => {
+    console.log(article.headline);
+  })
+
+  return card;
+
 }
 
 const cardAppender = (selector) => {
@@ -28,6 +68,66 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+
+  const cardContainer = document.querySelector(selector);
+  axios.get('http://localhost:5000/api/articles')
+    .then(res => {
+      res.data.articles.javascript.forEach(item => {
+        cardContainer.appendChild(Card(item));
+      });
+      res.data.articles.bootstrap.forEach(item => {
+        cardContainer.appendChild(Card(item));
+      });
+      res.data.articles.technology.forEach(item => {
+        cardContainer.appendChild(Card(item));
+      });
+      res.data.articles.jquery.forEach(item => {
+        cardContainer.appendChild(Card(item));
+      });
+      res.data.articles.node.forEach(item => {
+        cardContainer.appendChild(Card(item));
+      });
+
+      // filter
+
+      let javascriptLink = document.querySelector('.tab:nth-child(1)');
+      let bootstrapLink = document.querySelector('.tab:nth-child(2)');
+      let technologyLink = document.querySelector('.tab:nth-child(3)');
+      let jqueryLink = document.querySelector('.tab:nth-child(4)');
+      let nodejsLink = document.querySelector('.tab:nth-child(5)');
+
+      javascriptLink.addEventListener('click', () => {
+        cardContainer.textContent = "";
+        res.data.articles.javascript.forEach(item => {
+          cardContainer.appendChild(Card(item));
+        });
+      })
+      bootstrapLink.addEventListener('click', () => {
+        cardContainer.textContent = "";
+        res.data.articles.bootstrap.forEach(item => {
+          cardContainer.appendChild(Card(item));
+        });
+      })
+      technologyLink.addEventListener('click', () => {
+        cardContainer.textContent = "";
+        res.data.articles.technology.forEach(item => {
+          cardContainer.appendChild(Card(item));
+        });
+      })
+      jqueryLink.addEventListener('click', () => {
+        cardContainer.textContent = "";
+        res.data.articles.jquery.forEach(item => {
+          cardContainer.appendChild(Card(item));
+        });
+      })
+      nodejsLink.addEventListener('click', () => {
+        cardContainer.textContent = "";
+        res.data.articles.node.forEach(item => {
+          cardContainer.appendChild(Card(item));
+        });
+      })
+    }).catch(err => { console.error(err); })
+  return cardContainer;
 }
 
 export { Card, cardAppender }
